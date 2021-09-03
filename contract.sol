@@ -9,11 +9,14 @@ contract threads{
         string status;
     }
     mapping(uint => order) private orders;
+    
     struct payment_status{
         uint cost;
         string status;
     }
+    
     mapping(uint => payment_status) private payee;
+    
     struct Users{// to limit user access.
         uint id;
         string name;
@@ -62,7 +65,13 @@ contract threads{
             _order.status="order_declined | payment_incomplete";
         }
     }
-    function paied(uint _orderid) public {
+    function mkPayment(uint _orderid) public {
+        
+    }
+    function acPayment(uint _orderid) public {
+        
+    }
+    function view_orderStat(uint _orderid) public view returns(string memory){
         
     }
     
