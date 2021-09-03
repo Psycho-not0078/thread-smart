@@ -11,11 +11,12 @@ contract threads{
     mapping(uint => order) private orders;
     
     struct payment_status{
-        uint cost;
+        uint order_id;
         string status;
+        string proof;
     }
     
-    mapping(uint => payment_status) private payee;
+    mapping(uint => payment_status) private payment;
     
     struct Users{// to limit user access.
         uint id;
@@ -55,8 +56,8 @@ contract threads{
     }
     function acOrder(uint _orderid, uint _stat) public {
         require(user[User[msg.sender]].role==1);
-        require(_stat>0);
-        require(_stat<3);
+        require(_stat>0 && _stat<3);
+        require(_orderid>0 && _orderid<orderCount);
         order storage _order=orders[_orderid];
         if (_stat==1){//ie the accept condition
             _order.status="order_acknowledged | payment_incomplete";
@@ -65,14 +66,29 @@ contract threads{
             _order.status="order_declined | payment_incomplete";
         }
     }
-    function mkPayment(uint _orderid) public {
-        
+    function mkPayment(uint _orderid, string memory _proof) public {
+        require(user[User[msg.sender]].role==2);
+        require(_orderid>0 && _orderid<orderCount);
+        paymentCount++;
+        payment[paymentCount]=payment_status(_orderid,"Awaiting_Confirmation",_proof);
     }
-    function acPayment(uint _orderid) public {
-        
+    function acPayment(uint _payid, uint _stat) public {
+        require(user[User[msg.sender]].role==1);
+        require(_stat>=0 && _stat<1);
+        require(_payid>0 && _payid<paymentCount);
+        payment_status storage _payment=payment[_payid];
+        order storage _order=orders[_payment.order_id];
+        if (_stat==1){//ie the accept condition
+            _payment.status="Confirmed";
+            _order.status="order_acknowledged | payment_acknowledged";
+        }
     }
     function view_orderStat(uint _orderid) public view returns(string memory){
+        require(_orderid>0 && _orderid<orderCount);
         
+    }
+    function view_payStat(uint _payid) public view returns(string memory){
+        require(_payid>0 && _payid<paymentCount);
     }
     
 }
