@@ -83,12 +83,14 @@ contract threads{
             _order.status="order_acknowledged | payment_acknowledged";
         }
     }
-    function view_orderStat(uint _orderid) public view returns(string memory){
+    function view_orderStat(uint _orderid) public view returns(order memory){
         require(_orderid>0 && _orderid<orderCount);
+        return orders[_orderid];
         
     }
-    function view_payStat(uint _payid) public view returns(string memory){
+    function view_payStat(uint _payid) public view returns(payment_status memory){
         require(_payid>0 && _payid<paymentCount);
+        return payment[_payid];
     }
     
 }
