@@ -88,12 +88,12 @@ contract threads{
         }
     }
     function view_orderStat(uint _orderid) public view returns(order memory) {
-        require(_orderid>0 && _orderid<=orderCount);
+        require(_orderid>0 && _orderid<=orderCount,"order doesnt exist");
         return orders[_orderid];//returns a tuple hence can be difficult to read
         
     }
     function view_payStat(uint _payid) public view returns(payment_status memory){
-        require(_payid>0 && _payid<=orderCount);
+        require(_payid>0 && _payid<=paymentCount,"payment doesnt exist");
         return payment[_payid];//returns a tuple hence can be difficult to read
     }
     
