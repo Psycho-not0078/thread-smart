@@ -40,19 +40,22 @@ contract threads{
         user[User[_ad]]=Users(userCount, User[_ad], 1); 
     }
     
-    function addUser(string memory _name, uint _role, address _ad) public {// function to add a user
+    function addUser(string memory _name, uint _role, address _ad) public returns(uint){// function to add a user
         require(user[User[msg.sender]].role==1,"the role doesnt allow it");
         userCount++;
         User[_ad]=_name;
         user[User[_ad]]=Users(userCount,_name,_role);
+        return userCount;
     }
-    function mkOrder(uint _qty, uint _typ) public{
+    function mkOrder(uint _qty, uint _typ) public returns(uint){
         require(user[User[msg.sender]].role==2,"the role doesnt allow it");
         require(_typ>=1);
         orderCount++;
         uint _cost=0;
         _cost=((_typ*33)/100)*_qty;
         orders[orderCount]=order(orderCount,_qty,_typ,_cost,"awaiting_acknowledgement | payment_incomplete"); //after this a event can be triggered with the status being printed to show success.
+        return orderCount;
+        
     }
     function acOrder(uint _orderid, uint _stat) public {
         require(user[User[msg.sender]].role==1,"the role doesnt allow it");
@@ -66,11 +69,12 @@ contract threads{
             _order.status="order_declined | payment_incomplete";
         }
     }
-    function mkPayment(uint _orderid, string memory _proof) public {
+    function mkPayment(uint _orderid, string memory _proof) public returns(uint){
         require(user[User[msg.sender]].role==2,"the role doesnt allow it");
         require(_orderid>0 && _orderid<orderCount);
         paymentCount++;
         payment[paymentCount]=payment_status(_orderid,"Awaiting_Confirmation",_proof);
+        return paymentCount;
     }
     function acPayment(uint _payid, uint _stat) public {
         require(user[User[msg.sender]].role==1,"the role doesnt allow it");
