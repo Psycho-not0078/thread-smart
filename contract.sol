@@ -31,7 +31,7 @@ contract threads{
     uint private paymentCount;
     
     constructor(){
-        init(msg.sender);
+        init(msg.sender);//adds the first user who can/will add the others
     }
 
     function init(address _ad) private{
@@ -45,7 +45,7 @@ contract threads{
         userCount++;
         User[_ad]=_name;
         user[User[_ad]]=Users(userCount,_name,_role);
-        return userCount;
+        return userCount;//returns the input record's id for reference
     }
     function mkOrder(uint _qty, uint _typ) public returns(uint){
         require(user[User[msg.sender]].role==2,"the role doesnt allow it");
@@ -54,7 +54,7 @@ contract threads{
         uint _cost=0;
         _cost=((_typ*33)/100)*_qty;
         orders[orderCount]=order(orderCount,_qty,_typ,_cost,"awaiting_acknowledgement | payment_incomplete"); //after this a event can be triggered with the status being printed to show success.
-        return orderCount;
+        return orderCount;//returns the input record's id for reference
         
     }
     function acOrder(uint _orderid, uint _stat) public {
@@ -74,7 +74,7 @@ contract threads{
         require(_orderid>0 && _orderid<orderCount);
         paymentCount++;
         payment[paymentCount]=payment_status(_orderid,"Awaiting_Confirmation",_proof);
-        return paymentCount;
+        return paymentCount;//returns the input record's id for reference
     }
     function acPayment(uint _payid, uint _stat) public {
         require(user[User[msg.sender]].role==1,"the role doesnt allow it");
@@ -89,12 +89,12 @@ contract threads{
     }
     function view_orderStat(uint _orderid) public view returns(order memory) {
         require(_orderid>0 && _orderid<=orderCount);
-        return orders[_orderid];
+        return orders[_orderid];//returns a tuple hence can be difficult to read
         
     }
     function view_payStat(uint _payid) public view returns(payment_status memory){
         require(_payid>0 && _payid<=orderCount);
-        return payment[_payid];
+        return payment[_payid];//returns a tuple hence can be difficult to read
     }
     
 }
